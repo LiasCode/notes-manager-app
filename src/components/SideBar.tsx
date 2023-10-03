@@ -13,7 +13,7 @@ export const SideBar = () => {
       <button
         onClick={toggleIsOpenActionsBar}
         type={"button"}
-        className="w-8 h-7 p-[2px] flex flex-col rounded-sm border-2 border-red-200 items-center justify-start cursor-pointer"
+        className="w-8 h-7 p-[2px] flex flex-col rounded-sm hover:border-2 hover:border-red-200 items-center justify-start cursor-pointer"
       >
         <img
           src={MenuIcon}
@@ -23,11 +23,19 @@ export const SideBar = () => {
       </button>
 
       {isOpenActionsBar && (
-        <div className="
-          flex flex-col items-center justify-start border-2 rounded-sm border-red-200 
-          w-full flex-1 max-h-[80%] mt-4 pt-4 bg-transparent">
-          <button className="mt-2 text-[1rem]">T</button>
-          <button className="mt-2 text-[1rem]">N</button>
+        <div
+          className="
+          flex flex-col items-center justify-start outline outline-2 outline-red-200 rounded-md px-1
+          w-full flex-1 max-h-[80%] mt-4 bg-transparent"
+        >
+          <button className="mt-2 text-[1rem] hover:font-semibold w-full 
+            hover:bg-red-200 hover:text-white rounded-md h-max border-2 border-red-200">
+            T
+          </button>
+          <button className="mt-2 text-[1rem] hover:font-semibold w-full
+            hover:bg-red-200 hover:text-white rounded-md h-max border-2 border-red-200">
+            N
+          </button>
         </div>
       )}
     </aside>
