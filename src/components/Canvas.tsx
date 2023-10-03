@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { NoteCard } from "./NoteCard";
-import { useMoveNoteCard } from "./useMoveNoteCard";
 
 export type Note = {
   id: string;
@@ -14,34 +13,121 @@ export const Canvas = () => {
   const [notes, setNotes] = useState<Note[]>([]);
 
   function createNewNote() {
-    setNotes([
-      ...notes,
-      {
-        id: Math.random().toString(),
-        content: "content",
-        title: "title",
-        offsetTop: 0,
-        offsetLeft: 0,
-      },
-    ]);
+    setNotes(() => {
+      const newNotes = [
+        ...notes,
+        {
+          id: Math.random().toString(),
+          content: "content",
+          title: "title",
+          offsetTop: window.innerHeight / 2 - 200,
+          offsetLeft: window.innerWidth / 2 -200,
+        },
+      ];
+      saveNotes(newNotes);
+      return newNotes;
+    });
   }
 
-  useMoveNoteCard({ setNotes });
+  function updateNote(newNote: Note) {
+    setNotes(() => {
+      const newNotes = notes.map((note) => {
+        if (note.id === newNote.id) {
+          return {
+            ...newNote,
+          };
+        }
+        return note;
+      });
+      saveNotes(newNotes);
+      return newNotes;
+    });
+  }
+
+  function removeNote(id: string) {
+    setNotes((prevNotes) => {
+      const newNotes = prevNotes.filter((note) => note.id !== id);
+      saveNotes(newNotes);
+      return newNotes;
+    });
+  }
+
+  function saveNotes(notes: Note[]) {
+    localStorage.setItem("notes", JSON.stringify(notes));
+  }
+
+  /// <--- Note Card Movement
+  const handlerNoteMove = (e: MouseEvent) => {
+    const activeNoteCard = document.querySelector<HTMLDivElement>(
+      ".--movement-active--"
+    );
+    if (!activeNoteCard) return;
+
+    const newOffsetY = e.clientY - 5;
+    const newOffsetX = e.clientX - 70;
+
+    activeNoteCard.style.top = `${newOffsetY}px`;
+    activeNoteCard.style.left = `${newOffsetX}px`;
+
+    if (!activeNoteCard.dataset.noteid) throw new Error("Notes Id not found");
+
+    setNotes((prevNotes) => {
+      const updatedNewNotes = prevNotes.map((note) => {
+        if (note.id === activeNoteCard.dataset.noteid) {
+          return {
+            ...note,
+            offsetTop: newOffsetY,
+            offsetLeft: newOffsetX,
+          };
+        }
+        return note;
+      });
+      saveNotes(updatedNewNotes);
+      return updatedNewNotes;
+    });
+  };
 
   useEffect(() => {
-    console.log(notes);
+    document.addEventListener("mousemove", handlerNoteMove);
+
+    return () => {
+      document.removeEventListener("mousemove", handlerNoteMove);
+    };
+  }, []);
+  /// <--- Note Card Movement
+
+  /// load saved notes
+  useEffect(() => {
+    const savedNotes = localStorage.getItem("notes");
+    if (savedNotes) {
+      setNotes(JSON.parse(savedNotes));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (import.meta.env.DEV) {
+      console.clear();
+      console.log({ notes });
+    }
   }, [notes]);
 
   return (
-    <div className="w-full min-h-screen border-2 border-red-200 flex relative justify-center items-start">
+    <div className="w-full min-h-screen flex relative justify-center items-start">
       <button
         onClick={createNewNote}
-        className="cursor-pointer rounded-md w-max h-max border-2 border-red-200 p-2 flex relative justify-center items-center"
+        className="
+        shadow-md shadow-red-200 mt-1 mr-[8%]
+        cursor-pointer rounded-md w-max h-max border-2 border-red-200 p-2 flex relative justify-center items-center"
       >
         Create new note
       </button>
       {notes.map((note) => (
-        <NoteCard key={note.id} noteInfo={note} />
+        <NoteCard
+          key={note.id}
+          noteInfo={note}
+          removeNote={removeNote}
+          updateNote={updateNote}
+        />
       ))}
     </div>
   );

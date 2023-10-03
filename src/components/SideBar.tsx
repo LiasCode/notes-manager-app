@@ -26,8 +26,8 @@ export const SideBar = () => {
         <div className="
           flex flex-col items-center justify-start border-2 rounded-sm border-red-200 
           w-full flex-1 max-h-[80%] mt-4 pt-4 bg-transparent">
-          <button>T</button>
-          <button className="mt-2">N</button>
+          <button className="mt-2 text-[1rem]">T</button>
+          <button className="mt-2 text-[1rem]">N</button>
         </div>
       )}
     </aside>
