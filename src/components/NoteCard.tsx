@@ -35,7 +35,7 @@ export const NoteCard = ({
         isMoveActive ? "--movement-active-- " : ""
       } top-0 shadow-md shadow-red-100
         active:cursor-move bg-red-50 left-0 rounded-md p-2 flex flex-col border border-red-200 
-        min-w-64 w-max min-h-64 h-max absolute z-2`}
+        min-w-64 w-max min-h-64 h-max fixed z-50`}
     >
       <div
         onMouseDown={toggleIsMoveActive}
