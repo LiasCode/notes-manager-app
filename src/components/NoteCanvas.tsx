@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { NoteCard } from "./NoteCard";
 
 export type Note = {
@@ -9,7 +9,7 @@ export type Note = {
   offsetTop: number;
 };
 
-export const Canvas = () => {
+export const NoteCanvas = () => {
   const [notes, setNotes] = useState<Note[]>([]);
 
   function createNewNote() {
@@ -21,7 +21,7 @@ export const Canvas = () => {
           content: "content",
           title: "title",
           offsetTop: window.innerHeight / 2 - 200,
-          offsetLeft: window.innerWidth / 2 -200,
+          offsetLeft: window.innerWidth / 2 - 200,
         },
       ];
       saveNotes(newNotes);
@@ -57,7 +57,7 @@ export const Canvas = () => {
   }
 
   /// <--- Note Card Movement
-  const handlerNoteMove = (e: MouseEvent) => {
+  const handlerNoteMove = useCallback((e: MouseEvent) => {
     const activeNoteCard = document.querySelector<HTMLDivElement>(
       ".--movement-active--"
     );
@@ -85,7 +85,7 @@ export const Canvas = () => {
       saveNotes(updatedNewNotes);
       return updatedNewNotes;
     });
-  };
+  }, []);
 
   useEffect(() => {
     document.addEventListener("mousemove", handlerNoteMove);
@@ -93,7 +93,7 @@ export const Canvas = () => {
     return () => {
       document.removeEventListener("mousemove", handlerNoteMove);
     };
-  }, []);
+  }, [handlerNoteMove]);
   /// <--- Note Card Movement
 
   /// load saved notes
@@ -117,9 +117,13 @@ export const Canvas = () => {
         onClick={createNewNote}
         className="
         shadow-md shadow-red-200 mt-1 mr-[8%]
-        cursor-pointer rounded-md w-max h-max hover:shadow-red-300  outline outline-2 outline-red-200 p-2 flex relative justify-center items-center"
+        cursor-pointer rounded-md w-max h-max hover:shadow-red-300
+        outline outline-2 outline-red-200 p-2 flex relative justify-center items-center"
       >
-        Create new note
+        Create new
+        <span className="ml-2 font-bold capitalize text-red-400 italic">
+          note
+        </span>
       </button>
       {notes.map((note) => (
         <NoteCard

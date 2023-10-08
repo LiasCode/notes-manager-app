@@ -1,6 +1,6 @@
 import { useState } from "react";
 import MoveIcon from "../assets/move-icon.png";
-import { Note } from "./Canvas";
+import { Note } from "./NoteCanvas";
 
 export const NoteCard = ({
   noteInfo,
@@ -34,7 +34,7 @@ export const NoteCard = ({
       className={`${
         isMoveActive ? "--movement-active-- " : ""
       } top-0 shadow-md shadow-red-100
-        active:cursor-move bg-red-50 left-0 rounded-md p-2 flex flex-col border border-red-200 
+        active:cursor-move bg-red-50 left-0 rounded-md p-2 flex flex-col border border-red-200
         min-w-64 w-max min-h-64 h-max fixed z-50`}
     >
       <div
